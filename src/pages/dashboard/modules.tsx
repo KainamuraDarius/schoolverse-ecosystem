@@ -10,19 +10,7 @@ export const Book = () => (
   />
 );
 
-export const Notes = () => (
-  <ModulePlaceholder
-    title="iSchool Notes"
-    tagline="Interactive Learning Workspace"
-    icon={NotebookPen}
-    features={[
-      "Expandable answer spaces", "Embedded videos, GIFs and photos",
-      "Exercises and quizzes", "Activities of integration",
-      "Reading progress", "Multimedia integration",
-      "PhET-style simulations", "Annotation tools",
-    ]}
-  />
-);
+export { default as Notes } from "./Notes";
 
 export const CalendarPage = () => (
   <ModulePlaceholder
