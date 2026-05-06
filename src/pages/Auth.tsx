@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,9 +14,23 @@ export default function AuthPage() {
   const nav = useNavigate();
   const { user, loading } = useAuth();
   const [busy, setBusy] = useState(false);
+  const [resending, setResending] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+
+  const authMessage = (message: string) => {
+    if (message === "Email not confirmed") {
+      return "Your account exists, but you need to confirm your email before signing in.";
+    }
+    if (message.includes("weak and easy to guess")) {
+      return "That password is too weak. Use a longer, less common password with mixed characters.";
+    }
+    if (message.includes("missing OAuth secret")) {
+      return "Google sign-in is not configured in Supabase yet. Add the Google OAuth client ID and secret in your Supabase Auth provider settings.";
+    }
+    return message;
+  };
 
   useEffect(() => {
     if (!loading && user) nav("/dashboard", { replace: true });
@@ -28,7 +41,7 @@ export default function AuthPage() {
     setBusy(true);
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setBusy(false);
-    if (error) toast.error(error.message);
+    if (error) toast.error(authMessage(error.message));
     else nav("/dashboard");
   };
 
@@ -44,20 +57,44 @@ export default function AuthPage() {
       },
     });
     setBusy(false);
-    if (error) toast.error(error.message);
-    else toast.success("Check your email to confirm your account.");
+    if (error) toast.error(authMessage(error.message));
+    else toast.success("Account created. Check your email and confirm it before signing in.");
   };
 
   const handleGoogle = async () => {
     setBusy(true);
-    const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: `${window.location.origin}/dashboard` });
-    if (result.error) {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/dashboard`,
+      },
+    });
+    if (error) {
       setBusy(false);
-      toast.error("Google sign-in failed");
+      toast.error(authMessage(error.message || "Google sign-in failed"));
       return;
     }
-    if (result.redirected) return;
-    nav("/dashboard");
+  };
+
+  const handleResendConfirmation = async () => {
+    if (!email) {
+      toast.error("Enter your email address first.");
+      return;
+    }
+    setResending(true);
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email,
+      options: {
+        emailRedirectTo: `${window.location.origin}/dashboard`,
+      },
+    });
+    setResending(false);
+    if (error) {
+      toast.error(authMessage(error.message));
+      return;
+    }
+    toast.success("Confirmation email sent. Check your inbox and spam folder.");
   };
 
   return (
@@ -87,7 +124,13 @@ export default function AuthPage() {
                   <Label>Password</Label>
                   <Input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
                 </div>
+                <p className="text-xs text-muted-foreground">
+                  If you already signed up, confirm your email before trying to sign in.
+                </p>
                 <Button type="submit" className="w-full" disabled={busy}>Sign in</Button>
+                <Button type="button" variant="ghost" className="w-full" onClick={handleResendConfirmation} disabled={busy || resending}>
+                  {resending ? "Sending confirmation..." : "Resend confirmation email"}
+                </Button>
               </form>
             </TabsContent>
 
@@ -105,6 +148,9 @@ export default function AuthPage() {
                   <Label>Password</Label>
                   <Input type="password" minLength={6} required value={password} onChange={(e) => setPassword(e.target.value)} />
                 </div>
+                <p className="text-xs text-muted-foreground">
+                  Use a strong password. Common passwords are rejected by Supabase.
+                </p>
                 <Button type="submit" className="w-full" disabled={busy}>Create account</Button>
               </form>
             </TabsContent>
