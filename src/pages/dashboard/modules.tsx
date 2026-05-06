@@ -12,14 +12,7 @@ export const Book = () => (
 
 export { default as Notes } from "./Notes";
 
-export const CalendarPage = () => (
-  <ModulePlaceholder
-    title="iSchool Calendar"
-    tagline="Academic Life Manager"
-    icon={Calendar}
-    features={["Lessons", "Assignments", "Exams", "Meetings", "Notifications"]}
-  />
-);
+export { default as CalendarPage } from "./Calendar";
 
 export const Monitor = () => (
   <ModulePlaceholder
