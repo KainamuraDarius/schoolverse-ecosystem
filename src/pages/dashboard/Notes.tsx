@@ -3,14 +3,17 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Plus, Pin, PinOff, Trash2, Search, NotebookPen, Loader2 } from "lucide-react";
+import { Plus, Pin, PinOff, Trash2, Search, NotebookPen, Loader2, Eye } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import RichTextEditor from "@/components/RichTextEditor";
+import MediaEmbedManager from "@/components/MediaEmbedManager";
+import ExerciseManager, { Exercise } from "@/components/ExerciseManager";
 
 type Note = {
   id: string;
@@ -20,6 +23,9 @@ type Note = {
   color: string;
   pinned: boolean;
   subject: string | null;
+  media_embeds?: any[];
+  exercises?: Exercise[];
+  reading_progress?: number;
   created_at: string;
   updated_at: string;
 };
@@ -243,12 +249,63 @@ export default function Notes() {
                   placeholder="Note title"
                   className="border-0 bg-transparent px-0 text-2xl md:text-3xl font-display font-semibold focus-visible:ring-0 shadow-none h-auto"
                 />
-                <Textarea
-                  value={active.content}
-                  onChange={(e) => scheduleSave(active.id, { content: e.target.value })}
-                  placeholder="Start writing… paste links, embed ideas, capture lesson takeaways."
-                  className="mt-4 border-0 bg-transparent px-0 resize-none min-h-[400px] focus-visible:ring-0 shadow-none text-base leading-relaxed"
-                />
+                
+                <Tabs defaultValue="editor" className="w-full mt-6">
+                  <TabsList className="grid w-full grid-cols-3 mb-4">
+                    <TabsTrigger value="editor">Write</TabsTrigger>
+                    <TabsTrigger value="media">Media</TabsTrigger>
+                    <TabsTrigger value="exercises">Exercises</TabsTrigger>
+                  </TabsList>
+
+                  <TabsContent value="editor" className="mt-0">
+                    <div className="space-y-4">
+                      <RichTextEditor
+                        content={active.content}
+                        onChange={(html) => scheduleSave(active.id, { content: html })}
+                        placeholder="Start writing… Add formatted text, links, and embeds."
+                        className="min-h-[400px]"
+                      />
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <Eye className="h-3 w-3" />
+                        <span>Reading progress: {active.reading_progress ?? 0}%</span>
+                      </div>
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="media" className="mt-0">
+                    <MediaEmbedManager
+                      embeds={active.media_embeds ?? []}
+                      onAdd={(embed) => {
+                        const updated = [...(active.media_embeds ?? []), embed];
+                        scheduleSave(active.id, { media_embeds: updated });
+                      }}
+                      onRemove={(id) => {
+                        const updated = (active.media_embeds ?? []).filter((e) => e.id !== id);
+                        scheduleSave(active.id, { media_embeds: updated });
+                      }}
+                    />
+                  </TabsContent>
+
+                  <TabsContent value="exercises" className="mt-0">
+                    <ExerciseManager
+                      exercises={active.exercises ?? []}
+                      onAdd={(exercise) => {
+                        const updated = [...(active.exercises ?? []), exercise];
+                        scheduleSave(active.id, { exercises: updated });
+                      }}
+                      onRemove={(id) => {
+                        const updated = (active.exercises ?? []).filter((e) => e.id !== id);
+                        scheduleSave(active.id, { exercises: updated });
+                      }}
+                      onSubmitAnswer={(id, answer) => {
+                        const updated = (active.exercises ?? []).map((e) =>
+                          e.id === id ? { ...e, userAnswer: answer } : e
+                        );
+                        scheduleSave(active.id, { exercises: updated });
+                      }}
+                    />
+                  </TabsContent>
+                </Tabs>
               </div>
             </>
           )}
