@@ -23,14 +23,7 @@ export const Monitor = () => (
   />
 );
 
-export const Reports = () => (
-  <ModulePlaceholder
-    title="iSchool Reports"
-    tagline="Academic Intelligence System"
-    icon={BarChart3}
-    features={["Continuous assessment tracking", "Exam analysis", "Automated report cards", "Performance trends"]}
-  />
-);
+export { default as Reports } from "./Reports";
 
 export const Timetables = () => (
   <ModulePlaceholder
