@@ -14,6 +14,62 @@ export type Database = {
   }
   public: {
     Tables: {
+      assessments: {
+        Row: {
+          assessed_on: string
+          assessment_type: Database["public"]["Enums"]["assessment_type"]
+          created_at: string
+          id: string
+          max_score: number
+          notes: string | null
+          score: number
+          subject_id: string
+          term: string
+          title: string
+          updated_at: string
+          user_id: string
+          weight: number
+        }
+        Insert: {
+          assessed_on?: string
+          assessment_type?: Database["public"]["Enums"]["assessment_type"]
+          created_at?: string
+          id?: string
+          max_score?: number
+          notes?: string | null
+          score?: number
+          subject_id: string
+          term?: string
+          title?: string
+          updated_at?: string
+          user_id: string
+          weight?: number
+        }
+        Update: {
+          assessed_on?: string
+          assessment_type?: Database["public"]["Enums"]["assessment_type"]
+          created_at?: string
+          id?: string
+          max_score?: number
+          notes?: string | null
+          score?: number
+          subject_id?: string
+          term?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assessments_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       events: {
         Row: {
           all_day: boolean
@@ -122,6 +178,36 @@ export type Database = {
         }
         Relationships: []
       }
+      subjects: {
+        Row: {
+          code: string | null
+          color: string
+          created_at: string
+          id: string
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          code?: string | null
+          color?: string
+          created_at?: string
+          id?: string
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          code?: string | null
+          color?: string
+          created_at?: string
+          id?: string
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -158,6 +244,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "teacher" | "student"
+      assessment_type: "test" | "quiz" | "assignment" | "exam" | "project"
       event_type: "lesson" | "assignment" | "exam" | "meeting" | "other"
     }
     CompositeTypes: {
@@ -287,6 +374,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "teacher", "student"],
+      assessment_type: ["test", "quiz", "assignment", "exam", "project"],
       event_type: ["lesson", "assignment", "exam", "meeting", "other"],
     },
   },
