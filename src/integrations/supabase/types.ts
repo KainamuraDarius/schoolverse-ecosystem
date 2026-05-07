@@ -70,6 +70,59 @@ export type Database = {
           },
         ]
       }
+      book_resources: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          pinned: boolean
+          resource_type: Database["public"]["Enums"]["resource_type"]
+          subject_id: string | null
+          tags: string[]
+          thumbnail_url: string | null
+          title: string
+          updated_at: string
+          url: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          id?: string
+          pinned?: boolean
+          resource_type?: Database["public"]["Enums"]["resource_type"]
+          subject_id?: string | null
+          tags?: string[]
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
+          url: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          pinned?: boolean
+          resource_type?: Database["public"]["Enums"]["resource_type"]
+          subject_id?: string | null
+          tags?: string[]
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
+          url?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "book_resources_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       events: {
         Row: {
           all_day: boolean
@@ -114,6 +167,59 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      lesson_sessions: {
+        Row: {
+          created_at: string
+          duration_minutes: number | null
+          ended_at: string | null
+          id: string
+          notes: string | null
+          scheduled_at: string
+          started_at: string | null
+          status: Database["public"]["Enums"]["session_status"]
+          subject_id: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          duration_minutes?: number | null
+          ended_at?: string | null
+          id?: string
+          notes?: string | null
+          scheduled_at?: string
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["session_status"]
+          subject_id?: string | null
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          duration_minutes?: number | null
+          ended_at?: string | null
+          id?: string
+          notes?: string | null
+          scheduled_at?: string
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["session_status"]
+          subject_id?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lesson_sessions_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       notes: {
         Row: {
@@ -208,6 +314,62 @@ export type Database = {
         }
         Relationships: []
       }
+      timetable_entries: {
+        Row: {
+          class_name: string | null
+          color: string
+          created_at: string
+          day_of_week: number
+          end_time: string
+          id: string
+          room: string | null
+          start_time: string
+          subject_id: string | null
+          teacher: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          class_name?: string | null
+          color?: string
+          created_at?: string
+          day_of_week: number
+          end_time: string
+          id?: string
+          room?: string | null
+          start_time: string
+          subject_id?: string | null
+          teacher?: string | null
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          class_name?: string | null
+          color?: string
+          created_at?: string
+          day_of_week?: number
+          end_time?: string
+          id?: string
+          room?: string | null
+          start_time?: string
+          subject_id?: string | null
+          teacher?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "timetable_entries_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -229,6 +391,36 @@ export type Database = {
         }
         Relationships: []
       }
+      whiteboards: {
+        Row: {
+          created_at: string
+          data: Json
+          id: string
+          thumbnail: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          data?: Json
+          id?: string
+          thumbnail?: string | null
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          data?: Json
+          id?: string
+          thumbnail?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -246,6 +438,14 @@ export type Database = {
       app_role: "admin" | "teacher" | "student"
       assessment_type: "test" | "quiz" | "assignment" | "exam" | "project"
       event_type: "lesson" | "assignment" | "exam" | "meeting" | "other"
+      resource_type:
+        | "video"
+        | "simulation"
+        | "3d_model"
+        | "article"
+        | "link"
+        | "document"
+      session_status: "scheduled" | "attended" | "missed" | "late"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -376,6 +576,15 @@ export const Constants = {
       app_role: ["admin", "teacher", "student"],
       assessment_type: ["test", "quiz", "assignment", "exam", "project"],
       event_type: ["lesson", "assignment", "exam", "meeting", "other"],
+      resource_type: [
+        "video",
+        "simulation",
+        "3d_model",
+        "article",
+        "link",
+        "document",
+      ],
+      session_status: ["scheduled", "attended", "missed", "late"],
     },
   },
 } as const
