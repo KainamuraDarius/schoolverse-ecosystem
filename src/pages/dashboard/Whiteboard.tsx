@@ -29,7 +29,7 @@ export default function WhiteboardPage() {
   useEffect(() => {
     if (!user) return;
     supabase.from("whiteboards").select("*").order("updated_at", { ascending: false })
-      .then(({ data }) => setBoards((data ?? []) as Board[]));
+      .then(({ data }) => setBoards((data ?? []) as unknown as Board[]));
   }, [user]);
 
   useEffect(() => {
@@ -89,7 +89,7 @@ export default function WhiteboardPage() {
     if (!user) return;
     const { data, error } = await supabase.from("whiteboards").insert({ user_id: user.id, title: "Untitled board" }).select().single();
     if (error) return toast.error(error.message);
-    const b = data as Board;
+    const b = data as unknown as Board;
     setBoards((p) => [b, ...p]);
     setActive(b);
   };
