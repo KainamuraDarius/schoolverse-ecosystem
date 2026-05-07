@@ -102,7 +102,7 @@ export default function Notes() {
     if (saveTimer.current) window.clearTimeout(saveTimer.current);
     setSaving(true);
     saveTimer.current = window.setTimeout(async () => {
-      const { error } = await supabase.from("notes").update(partial).eq("id", id);
+      const { error } = await supabase.from("notes").update(partial as any).eq("id", id);
       setSaving(false);
       if (error) toast.error(error.message);
     }, 500);
