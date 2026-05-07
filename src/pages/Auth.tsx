@@ -63,17 +63,17 @@ export default function AuthPage() {
 
   const handleGoogle = async () => {
     setBusy(true);
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}/dashboard`,
-      },
+    const { lovable } = await import("@/integrations/lovable");
+    const result = await lovable.auth.signInWithOAuth("google", {
+      redirect_uri: `${window.location.origin}/dashboard`,
     });
-    if (error) {
+    if (result.error) {
       setBusy(false);
-      toast.error(authMessage(error.message || "Google sign-in failed"));
+      toast.error(authMessage((result.error as Error).message || "Google sign-in failed"));
       return;
     }
+    if (result.redirected) return;
+    nav("/dashboard");
   };
 
   const handleResendConfirmation = async () => {
