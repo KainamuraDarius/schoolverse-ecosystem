@@ -15,8 +15,12 @@ import {
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
-import { Plus, Trash2, BookOpen, Award, TrendingUp } from "lucide-react";
+import { Plus, Trash2, BookOpen, Award, TrendingUp, Trophy } from "lucide-react";
 import { toast } from "sonner";
+import {
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RTooltip,
+  ResponsiveContainer, Legend,
+} from "recharts";
 
 type AssessmentType = "test" | "quiz" | "assignment" | "exam" | "project";
 type Subject = { id: string; name: string; code: string | null; color: string };
