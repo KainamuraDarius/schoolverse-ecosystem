@@ -82,6 +82,32 @@ export default function ReportsModule() {
     return valid.reduce((sum, s) => sum + (s.average ?? 0), 0) / valid.length;
   }, [subjectStats]);
 
+  // Performance trend over time (chronological, by date)
+  const trendData = useMemo(() => {
+    const sorted = [...termAssessments].sort(
+      (a, b) => a.assessed_on.localeCompare(b.assessed_on)
+    );
+    const points: { date: string; pct: number; rolling: number }[] = [];
+    let sum = 0;
+    sorted.forEach((a, idx) => {
+      const pct = (Number(a.score) / Number(a.max_score)) * 100;
+      sum += pct;
+      points.push({
+        date: a.assessed_on.slice(5),
+        pct: Number(pct.toFixed(1)),
+        rolling: Number((sum / (idx + 1)).toFixed(1)),
+      });
+    });
+    return points;
+  }, [termAssessments]);
+
+  // Subject ranking (best to worst this term)
+  const ranking = useMemo(() => {
+    return subjectStats
+      .filter((s) => s.average !== null)
+      .sort((a, b) => (b.average ?? 0) - (a.average ?? 0));
+  }, [subjectStats]);
+
   const createSubject = async () => {
     if (!user || !newSubj.name.trim()) return;
     const { data, error } = await supabase.from("subjects")
