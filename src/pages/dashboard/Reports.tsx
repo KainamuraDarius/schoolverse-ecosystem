@@ -335,6 +335,7 @@ export default function ReportsModule() {
       </div>
 
       <Card className="p-5">
+        <h2 className="font-display text-lg mb-4">Assessments · {term}</h2>
         {termAssessments.length === 0 ? (
           <p className="text-sm text-muted-foreground py-6 text-center">No assessments recorded for this term.</p>
         ) : (
