@@ -92,3 +92,10 @@
   }
   h1, h2, h3, h4 { @apply font-semibold tracking-tight; }
 }
+
+@media print {
+  body * { visibility: hidden; }
+  .print-area, .print-area * { visibility: visible; }
+  .print-area { position: absolute; inset: 0; padding: 24px; background: white; color: black; }
+  .no-print { display: none !important; }
+}
