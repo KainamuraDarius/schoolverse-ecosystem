@@ -106,6 +106,16 @@ export default function Overview() {
           {role === "teacher" && "Your teaching day: timetable, lessons to deliver, and class performance."}
           {role === "student" && "Your learning day: upcoming lessons, recent notes, and progress."}
         </p>
+        {role === "admin" && (
+          <div className="mt-5">
+            <Link
+              to="/dashboard/admin"
+              className="inline-flex items-center gap-2 rounded-md bg-primary-foreground/10 hover:bg-primary-foreground/20 border border-primary-foreground/20 px-3 py-1.5 text-sm transition-colors"
+            >
+              <ShieldCheck className="h-4 w-4" /> Open school administration →
+            </Link>
+          </div>
+        )}
       </section>
 
       {/* Widgets */}

@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import AuthPage from "./pages/Auth";
 import DashboardLayout from "./layouts/DashboardLayout";
 import Overview from "./pages/dashboard/Overview";
+import AdminPage from "./pages/dashboard/Admin";
 import { Book, Notes, CalendarPage, Monitor, Reports, Timetables, Whiteboard } from "./pages/dashboard/modules";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
               <Route path="reports" element={<Reports />} />
               <Route path="timetables" element={<Timetables />} />
               <Route path="whiteboard" element={<Whiteboard />} />
+              <Route path="admin" element={<AdminPage />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
