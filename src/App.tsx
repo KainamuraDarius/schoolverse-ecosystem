@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import AuthPage from "./pages/Auth";
 import DashboardLayout from "./layouts/DashboardLayout";
 import Overview from "./pages/dashboard/Overview";
+import AdminPage from "./pages/dashboard/Admin";
 import { Book, Notes, CalendarPage, Monitor, Reports, Timetables, Whiteboard } from "./pages/dashboard/modules";
 
 const queryClient = new QueryClient();
