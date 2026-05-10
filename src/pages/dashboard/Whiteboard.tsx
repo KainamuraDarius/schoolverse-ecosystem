@@ -244,7 +244,7 @@ export default function Whiteboard() {
   const selectedClassName = metadataString(selectedLessonMeta?.class_name);
   const selectedMetaSubject = metadataString(selectedLessonMeta?.subject_name);
   const selectedTimetableClassKey = metadataString(selectedLessonMeta?.class_id);
-  const selectedLessonId = selectedLesson?.id ?? null;
+  
   const selectedLessonStartAt = selectedLesson?.start_at ?? null;
   const selectedLessonSubject = selectedLesson?.subject ?? null;
   const selectedLessonTitle = selectedLesson?.title ?? null;

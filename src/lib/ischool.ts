@@ -84,7 +84,7 @@ export function parseMediaEmbeds(value: unknown): MediaEmbed[] {
             caption: asString(item.caption) || undefined,
           };
         })
-        .filter((item): item is MediaEmbed => Boolean(item))
+        .filter(Boolean) as MediaEmbed[]
     : [];
 }
 
@@ -153,7 +153,7 @@ export function parseExercises(value: unknown): Exercise[] {
             userAnswer: asString(item.userAnswer) || undefined,
           };
         })
-        .filter((item): item is Exercise => Boolean(item))
+        .filter(Boolean) as Exercise[]
     : [];
 }
 

@@ -206,32 +206,6 @@ export default function ReportsModule() {
     return reportCard.reduce((sum, entry) => sum + entry.average, 0) / reportCard.length;
   }, [reportCard]);
 
-  // Performance trend over time (chronological, by date)
-  const trendData = useMemo(() => {
-    const sorted = [...termAssessments].sort(
-      (a, b) => a.assessed_on.localeCompare(b.assessed_on)
-    );
-    const points: { date: string; pct: number; rolling: number }[] = [];
-    let sum = 0;
-    sorted.forEach((a, idx) => {
-      const pct = (Number(a.score) / Number(a.max_score)) * 100;
-      sum += pct;
-      points.push({
-        date: a.assessed_on.slice(5),
-        pct: Number(pct.toFixed(1)),
-        rolling: Number((sum / (idx + 1)).toFixed(1)),
-      });
-    });
-    return points;
-  }, [termAssessments]);
-
-  // Subject ranking (best to worst this term)
-  const ranking = useMemo(() => {
-    return subjectStats
-      .filter((s) => s.average !== null)
-      .sort((a, b) => (b.average ?? 0) - (a.average ?? 0));
-  }, [subjectStats]);
-
   const createSubject = async () => {
     if (!user || !newSubject.name.trim()) return;
     const { data, error } = await supabase
@@ -585,72 +559,6 @@ export default function ReportsModule() {
         )}
       </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <Card className="p-5 lg:col-span-2">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-display text-lg flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-primary" /> Performance trend
-            </h2>
-            <span className="text-xs text-muted-foreground">{term}</span>
-          </div>
-          {trendData.length === 0 ? (
-            <p className="text-sm text-muted-foreground py-12 text-center">No data yet — record an assessment to see trends.</p>
-          ) : (
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={trendData} margin={{ top: 5, right: 12, left: -10, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" fontSize={11} />
-                  <YAxis domain={[0, 100]} stroke="hsl(var(--muted-foreground))" fontSize={11} />
-                  <RTooltip
-                    contentStyle={{
-                      background: "hsl(var(--card))",
-                      border: "1px solid hsl(var(--border))",
-                      borderRadius: 8,
-                      fontSize: 12,
-                    }}
-                  />
-                  <Legend wrapperStyle={{ fontSize: 12 }} />
-                  <Line type="monotone" dataKey="pct" name="Score %" stroke="hsl(var(--primary))" strokeWidth={2} dot={{ r: 3 }} />
-                  <Line type="monotone" dataKey="rolling" name="Running avg" stroke="hsl(var(--accent))" strokeWidth={2} strokeDasharray="4 4" dot={false} />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          )}
-        </Card>
-
-        <Card className="p-5">
-          <h2 className="font-display text-lg mb-4 flex items-center gap-2">
-            <Trophy className="h-4 w-4 text-primary" /> Subject ranking
-          </h2>
-          {ranking.length === 0 ? (
-            <p className="text-sm text-muted-foreground py-12 text-center">No graded subjects yet.</p>
-          ) : (
-            <ol className="space-y-2">
-              {ranking.map((r, idx) => {
-                const g = grade(r.average ?? 0);
-                return (
-                  <li key={r.subject.id} className="flex items-center gap-3 p-2 rounded-md border border-border/60">
-                    <span className={`h-7 w-7 shrink-0 rounded-full flex items-center justify-center text-xs font-semibold ${
-                      idx === 0 ? "bg-primary text-primary-foreground"
-                      : idx === 1 ? "bg-accent text-accent-foreground"
-                      : idx === 2 ? "bg-secondary text-secondary-foreground"
-                      : "bg-muted text-muted-foreground"
-                    }`}>{idx + 1}</span>
-                    <div className="flex-1 min-w-0">
-                      <div className="font-medium text-sm truncate">{r.subject.name}</div>
-                      <div className="text-xs text-muted-foreground">{r.count} entries</div>
-                    </div>
-                    <Badge variant="outline" className={g.tone}>
-                      {(r.average ?? 0).toFixed(1)}%
-                    </Badge>
-                  </li>
-                );
-              })}
-            </ol>
-          )}
-        </Card>
-      </div>
 
       <Card className="p-5">
         <h2 className="font-display text-lg text-foreground mb-4">Assessment ledger</h2>
