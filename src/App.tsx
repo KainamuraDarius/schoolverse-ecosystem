@@ -35,6 +35,7 @@ const App = () => (
               <Route path="timetables" element={<Timetables />} />
               <Route path="whiteboard" element={<Whiteboard />} />
               <Route path="admin" element={<AdminPage />} />
+              <Route path="teacher" element={<TeacherPage />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
