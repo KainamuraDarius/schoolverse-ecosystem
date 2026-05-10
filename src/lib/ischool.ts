@@ -153,7 +153,7 @@ export function parseExercises(value: unknown): Exercise[] {
             userAnswer: asString(item.userAnswer) || undefined,
           };
         })
-        .filter((item): item is Exercise => Boolean(item))
+        .filter(Boolean) as Exercise[]
     : [];
 }
 
