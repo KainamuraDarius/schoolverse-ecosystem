@@ -29,11 +29,14 @@ export function AppSidebar() {
   const { pathname } = useLocation();
   const { signOut, user } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isTeacher, setIsTeacher] = useState(false);
 
   useEffect(() => {
     if (!user) return;
     supabase.from("user_roles").select("role").eq("user_id", user.id).then(({ data }) => {
-      setIsAdmin((data ?? []).some((r: any) => r.role === "admin"));
+      const rs = (data ?? []).map((r: any) => r.role);
+      setIsAdmin(rs.includes("admin"));
+      setIsTeacher(rs.includes("teacher"));
     });
   }, [user]);
 
