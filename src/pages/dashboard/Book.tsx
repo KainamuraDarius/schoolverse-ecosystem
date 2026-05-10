@@ -183,7 +183,7 @@ export default function Book() {
     if (saveTimer.current) window.clearTimeout(saveTimer.current);
     setSaving(true);
     saveTimer.current = window.setTimeout(async () => {
-      const { error } = await supabase.from("notes").update(partial).eq("id", note.id);
+      const { error } = await supabase.from("notes").update(partial as never).eq("id", note.id);
       setSaving(false);
       if (error) toast.error(error.message);
     }, 450);
