@@ -225,13 +225,6 @@ export default function ReportsModule() {
     return points;
   }, [termAssessments]);
 
-  // Subject ranking (best to worst this term)
-  const ranking = useMemo(() => {
-    return subjectStats
-      .filter((s) => s.average !== null)
-      .sort((a, b) => (b.average ?? 0) - (a.average ?? 0));
-  }, [subjectStats]);
-
   const createSubject = async () => {
     if (!user || !newSubject.name.trim()) return;
     const { data, error } = await supabase
