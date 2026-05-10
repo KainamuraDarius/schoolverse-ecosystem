@@ -84,7 +84,7 @@ export function parseMediaEmbeds(value: unknown): MediaEmbed[] {
             caption: asString(item.caption) || undefined,
           };
         })
-        .filter((item): item is MediaEmbed => Boolean(item))
+        .filter(Boolean) as MediaEmbed[]
     : [];
 }
 
