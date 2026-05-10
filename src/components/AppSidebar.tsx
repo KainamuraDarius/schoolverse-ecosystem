@@ -78,19 +78,29 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {isAdmin && (
+        {(isTeacher || isAdmin) && (
           <SidebarGroup>
-            <SidebarGroupLabel>Administration</SidebarGroupLabel>
+            <SidebarGroupLabel>Staff</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem>
-                  <SidebarMenuButton asChild isActive={pathname === "/dashboard/admin"}>
-                    <NavLink to="/dashboard/admin" className="flex items-center gap-2">
-                      <ShieldCheck className="h-4 w-4" />
-                      {!collapsed && <span>School admin</span>}
+                  <SidebarMenuButton asChild isActive={pathname === "/dashboard/teacher"}>
+                    <NavLink to="/dashboard/teacher" className="flex items-center gap-2">
+                      <Users className="h-4 w-4" />
+                      {!collapsed && <span>Teacher workspace</span>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
+                {isAdmin && (
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={pathname === "/dashboard/admin"}>
+                      <NavLink to="/dashboard/admin" className="flex items-center gap-2">
+                        <ShieldCheck className="h-4 w-4" />
+                        {!collapsed && <span>School admin</span>}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
