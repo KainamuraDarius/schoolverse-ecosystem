@@ -206,25 +206,6 @@ export default function ReportsModule() {
     return reportCard.reduce((sum, entry) => sum + entry.average, 0) / reportCard.length;
   }, [reportCard]);
 
-  // Performance trend over time (chronological, by date)
-  const trendData = useMemo(() => {
-    const sorted = [...termAssessments].sort(
-      (a, b) => a.assessed_on.localeCompare(b.assessed_on)
-    );
-    const points: { date: string; pct: number; rolling: number }[] = [];
-    let sum = 0;
-    sorted.forEach((a, idx) => {
-      const pct = (Number(a.score) / Number(a.max_score)) * 100;
-      sum += pct;
-      points.push({
-        date: a.assessed_on.slice(5),
-        pct: Number(pct.toFixed(1)),
-        rolling: Number((sum / (idx + 1)).toFixed(1)),
-      });
-    });
-    return points;
-  }, [termAssessments]);
-
   const createSubject = async () => {
     if (!user || !newSubject.name.trim()) return;
     const { data, error } = await supabase
