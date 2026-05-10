@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
   LayoutDashboard, BookOpen, NotebookPen, Calendar, Activity,
-  BarChart3, CalendarRange, Presentation, GraduationCap, LogOut, ShieldCheck,
+  BarChart3, CalendarRange, Presentation, GraduationCap, LogOut, ShieldCheck, Users,
 } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
@@ -29,11 +29,14 @@ export function AppSidebar() {
   const { pathname } = useLocation();
   const { signOut, user } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isTeacher, setIsTeacher] = useState(false);
 
   useEffect(() => {
     if (!user) return;
     supabase.from("user_roles").select("role").eq("user_id", user.id).then(({ data }) => {
-      setIsAdmin((data ?? []).some((r: any) => r.role === "admin"));
+      const rs = (data ?? []).map((r: any) => r.role);
+      setIsAdmin(rs.includes("admin"));
+      setIsTeacher(rs.includes("teacher"));
     });
   }, [user]);
 
@@ -75,19 +78,29 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {isAdmin && (
+        {(isTeacher || isAdmin) && (
           <SidebarGroup>
-            <SidebarGroupLabel>Administration</SidebarGroupLabel>
+            <SidebarGroupLabel>Staff</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem>
-                  <SidebarMenuButton asChild isActive={pathname === "/dashboard/admin"}>
-                    <NavLink to="/dashboard/admin" className="flex items-center gap-2">
-                      <ShieldCheck className="h-4 w-4" />
-                      {!collapsed && <span>School admin</span>}
+                  <SidebarMenuButton asChild isActive={pathname === "/dashboard/teacher"}>
+                    <NavLink to="/dashboard/teacher" className="flex items-center gap-2">
+                      <Users className="h-4 w-4" />
+                      {!collapsed && <span>Teacher workspace</span>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
+                {isAdmin && (
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={pathname === "/dashboard/admin"}>
+                      <NavLink to="/dashboard/admin" className="flex items-center gap-2">
+                        <ShieldCheck className="h-4 w-4" />
+                        {!collapsed && <span>School admin</span>}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>

@@ -10,6 +10,7 @@ import AuthPage from "./pages/Auth";
 import DashboardLayout from "./layouts/DashboardLayout";
 import Overview from "./pages/dashboard/Overview";
 import AdminPage from "./pages/dashboard/Admin";
+import TeacherPage from "./pages/dashboard/Teacher";
 import { Book, Notes, CalendarPage, Monitor, Reports, Timetables, Whiteboard } from "./pages/dashboard/modules";
 
 const queryClient = new QueryClient();
@@ -34,6 +35,7 @@ const App = () => (
               <Route path="timetables" element={<Timetables />} />
               <Route path="whiteboard" element={<Whiteboard />} />
               <Route path="admin" element={<AdminPage />} />
+              <Route path="teacher" element={<TeacherPage />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
