@@ -32,16 +32,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-<<<<<<< HEAD
-import { Plus, Trash2, BookOpen, Award, TrendingUp, Trophy, Printer } from "lucide-react";
-import { toast } from "sonner";
-import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RTooltip,
-  ResponsiveContainer, Legend,
-} from "recharts";
-=======
 import { TERMS, formatClassLabel, gradeFromPercent, resolvePerspective, type AppPerspective } from "@/lib/ischool";
->>>>>>> df6fcd8 (feat: add timetable and whiteboard modules with associated policies and triggers)
 
 type SubjectRow = Tables<"subjects">;
 type AssessmentRow = Tables<"assessments">;
@@ -408,67 +399,6 @@ export default function ReportsModule() {
             Assessment tracker, report-card summaries, performance trends, and class ranking linked to the learner profile.
           </p>
         </div>
-<<<<<<< HEAD
-        <div className="flex items-center gap-2">
-          <Select value={term} onValueChange={setTerm}>
-            <SelectTrigger className="w-[140px]"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              {TERMS.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
-            </SelectContent>
-          </Select>
-          <Button variant="outline" onClick={() => setSubjOpen(true)}>
-            <BookOpen className="h-4 w-4 mr-1" /> Subject
-          </Button>
-          <Button variant="outline" onClick={() => window.print()} disabled={!subjects.length}>
-            <Printer className="h-4 w-4 mr-1" /> Print card
-          </Button>
-          <Button onClick={openNewAssessment}>
-            <Plus className="h-4 w-4 mr-1" /> Assessment
-          </Button>
-        </div>
-      </header>
-
-      {/* Printable report card (hidden on screen, visible only in print) */}
-      <div className="print-area hidden print:block">
-        <div className="flex items-center justify-between border-b-2 border-black pb-3 mb-4">
-          <div>
-            <h1 className="text-2xl font-bold">iSchoolVerse — Report Card</h1>
-            <p className="text-sm">{user?.email} · {term} · Issued {new Date().toLocaleDateString()}</p>
-          </div>
-          <div className="text-right">
-            <div className="text-xs uppercase">Overall</div>
-            <div className="text-3xl font-bold">{overall !== null ? `${overall.toFixed(1)}%` : "—"}</div>
-            {overall !== null && <div className="text-sm">Grade {grade(overall).letter}</div>}
-          </div>
-        </div>
-        <table className="w-full text-sm border-collapse">
-          <thead>
-            <tr className="border-b border-black">
-              <th className="text-left py-2">Subject</th>
-              <th className="text-center">Entries</th>
-              <th className="text-right">Average</th>
-              <th className="text-center">Grade</th>
-            </tr>
-          </thead>
-          <tbody>
-            {subjectStats.map(({ subject, count, average }) => (
-              <tr key={subject.id} className="border-b border-gray-300">
-                <td className="py-2">{subject.name}{subject.code ? ` (${subject.code})` : ""}</td>
-                <td className="text-center">{count}</td>
-                <td className="text-right font-mono">{average !== null ? `${average.toFixed(1)}%` : "—"}</td>
-                <td className="text-center">{average !== null ? grade(average).letter : "—"}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <div className="mt-8 grid grid-cols-2 gap-8 text-sm">
-          <div><div className="border-t border-black pt-1">Teacher signature</div></div>
-          <div><div className="border-t border-black pt-1">Parent signature</div></div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-=======
 
         <div className="flex flex-wrap items-end gap-3">
           <div>
@@ -556,7 +486,6 @@ export default function ReportsModule() {
       )}
 
       <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
->>>>>>> df6fcd8 (feat: add timetable and whiteboard modules with associated policies and triggers)
         <Card className="p-5">
           <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Overall average</div>
           <div className="font-display text-3xl text-primary mt-2">{overallAverage ? `${overallAverage.toFixed(1)}%` : "—"}</div>
