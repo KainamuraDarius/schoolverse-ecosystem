@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
   LayoutDashboard, BookOpen, NotebookPen, Calendar, Activity,
-  BarChart3, CalendarRange, Presentation, GraduationCap, LogOut, ShieldCheck,
+  BarChart3, CalendarRange, Presentation, GraduationCap, LogOut, ShieldCheck, Users,
 } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
